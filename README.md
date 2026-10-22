@@ -1,1 +1,25 @@
 # CS230
+Reflection
+Briefly summarize The Gaming Room client and their software requirements. Who was the client? What type of software did they want you to design?
+
+The client was The Gaming Room, a company that offered its game Draw It or Lose It only as a native Android app. The game is similar to the classic TV show Win, Lose or Draw: teams guess what a gradually revealed drawing represents within timed rounds. The Gaming Room wanted to expand the game into a web-based application that could run across platforms, including Windows, Mac, Linux, and mobile devices, without maintaining a separate code base for each one. Their core requirements were that a game supports one or more teams, each team supports multiple players, game and team names are unique, and only one instance of the game service exists in memory at a time, with unique identifiers for every game, team, and player.
+
+What did you do particularly well in developing this documentation?
+
+I think I did a good job of tying every recommendation back to the client's actual requirements instead of describing technologies in the abstract. For example, the Singleton pattern is connected directly to the single-instance requirement, the Iterator pattern to unique naming, and the PostgreSQL unique constraints to the same uniqueness rule at the storage level. The Evaluation table is also thorough: for each platform I covered characteristics, advantages, weaknesses, and licensing cost on the server side, and cost, time, and expertise on the client side, which made the final Linux recommendation easy to justify.
+
+What about the process of working through a design document did you find helpful when developing the code?
+
+Writing out the domain model before and alongside the code helped me see the class relationships clearly. Once I had described that Game, Team, and Player all inherit id and name from Entity, and that a Game is composed of Teams and a Team is composed of Players, the implementation of methods like addTeam() and addPlayer() followed naturally. Documenting the design constraints also made me think about issues such as concurrency and unique identifiers early, so the code was built to handle them rather than having them patched in later.
+
+If you could choose one part of your work on these documents to revise, what would you pick? How would you improve it?
+
+I would revise the System Architecture View, which I left as a placeholder because it was not required for these projects. Now that the Recommendations section describes the full deployment (browser and mobile clients, a load balancer, containerized Java servers on Linux, a Redis cache, a PostgreSQL database, and object storage with a CDN), I would add a logical topology diagram that shows how these tiers connect and communicate. That would give both the client and the development team a single visual reference for the whole system. I would also tighten some of the longer cells in the Evaluation table so the key points are easier to scan.
+
+How did you interpret the user's needs and implement them into your software design? Why is it so important to consider the user's needs when designing?
+
+I treated the client's stated requirements as the foundation and translated each one into a concrete design decision: unique names became an Iterator-based search before any new object is created, the single-instance requirement became a Singleton GameService, and the need to reach players on every device became a web-first, platform-independent architecture. I also considered the players themselves, such as people on unreliable mobile connections, which led to server-controlled round timers and automatic reconnection. Considering the user's needs is important because software that is technically sound but does not solve the user's real problem fails anyway. Designing around those needs from the start also prevents costly rework later.
+
+How did you approach designing software? What techniques or strategies would you use in the future to analyze and design a similar software application?
+
+I approached the design in layers, starting with the requirements and constraints, then building an object-oriented domain model using UML, then evaluating the operating platforms, and finally making recommendations that fit together as a complete system. Applying established design patterns (Singleton and Iterator) and object-oriented principles (inheritance, encapsulation, and polymorphism) kept the design clean and extensible. In the future, I would use the same requirements-first approach and add a few techniques: writing user stories and use-case diagrams to capture player workflows, creating sequence diagrams for real-time interactions such as a round of play, drawing an architecture diagram early, and building small prototypes to test risky assumptions such as WebSocket synchronization before committing to a design. I would also keep a revision history, as I did here, so the design evolves in a documented way as the project grows.
